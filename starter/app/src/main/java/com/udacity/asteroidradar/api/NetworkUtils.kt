@@ -1,5 +1,7 @@
 package com.udacity.asteroidradar.api
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import com.udacity.asteroidradar.Asteroid
 import com.udacity.asteroidradar.Constants
 import org.json.JSONObject
@@ -42,7 +44,8 @@ fun parseAsteroidsJsonResult(jsonResult: JSONObject): ArrayList<Asteroid> {
     return asteroidList
 }
 
-private fun getNextSevenDaysFormattedDates(): ArrayList<String> {
+@RequiresApi(Build.VERSION_CODES.N)
+public fun getNextSevenDaysFormattedDates(): ArrayList<String> {
     val formattedDateList = ArrayList<String>()
 
     val calendar = Calendar.getInstance()

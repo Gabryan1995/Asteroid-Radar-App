@@ -1,26 +1,72 @@
 package com.udacity.asteroidradar.main
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import android.util.Log
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.lifecycle.*
+import com.squareup.picasso.Picasso
 import com.udacity.asteroidradar.Asteroid
+import com.udacity.asteroidradar.api.AsteroidApi
+import com.udacity.asteroidradar.api.PotdApi
+import com.udacity.asteroidradar.api.PotdApiService
+import kotlinx.coroutines.launch
 
-class MainViewModel : ViewModel() {
-    private val _properties = MutableLiveData<List<Asteroid>>()
+enum class AsteroidApiStatus { LOADING, ERROR, DONE }
 
-    val properties: LiveData<List<Asteroid>>
-        get() = _properties
+class MainViewModel(application: Application) : AndroidViewModel(application) {
+    private val _asteroids = MutableLiveData<List<Asteroid>>()
+    val asteroids: LiveData<List<Asteroid>>
+        get() = _asteroids
 
-    private val _navigateToSelectedProperty = MutableLiveData<Asteroid?>()
+    private val _navigateToSelectedAsteroid = MutableLiveData<Asteroid?>()
+    val navigateToSelectedAsteroid: MutableLiveData<Asteroid?>
+        get() = _navigateToSelectedAsteroid
 
-    val navigateToSelectedProperty: MutableLiveData<Asteroid?>
-        get() = _navigateToSelectedProperty
+    private val _status = MutableLiveData<AsteroidApiStatus>()
+    val status: LiveData<AsteroidApiStatus>
+        get() = _status
 
-    fun displayPropertyDetails(asteroid: Asteroid) {
-        _navigateToSelectedProperty.value = asteroid
+    init {
+        getMarsRealEstateProperties()
     }
 
-    fun displayPropertyDetailsComplete() {
-        _navigateToSelectedProperty.value = null
+    private fun getMarsRealEstateProperties() {
+        viewModelScope.launch {
+            _status.value = AsteroidApiStatus.LOADING
+            try {
+                _asteroids.value = AsteroidApi.retrofitService.getProperties()
+                _status.value = AsteroidApiStatus.DONE
+            } catch (e: Exception) {
+                _status.value = AsteroidApiStatus.ERROR
+                _asteroids.value = ArrayList()
+            }
+        }
+    }
+
+    fun getPictureOfDay(imageView: ImageView, titleTextView: TextView) {
+        viewModelScope.launch {
+            try {
+                var potd = PotdApi.retrofitMoshiService.getPotD()
+
+                Picasso.with(getApplication<Application>().applicationContext)
+                    .load(potd.url)
+                    .into(imageView)
+
+                titleTextView.text = potd.title
+
+                Log.i("AsteroidsImage", "Success: ${potd.url}")
+            } catch (e: Exception) {
+                Log.i("AsteroidsImage", "Failure: ${e.message}")
+            }
+        }
+    }
+
+    fun displayAsteroidDetails(asteroid: Asteroid) {
+        _navigateToSelectedAsteroid.value = asteroid
+    }
+
+    fun displayAsteroidDetailsComplete() {
+        _navigateToSelectedAsteroid.value = null
     }
 }

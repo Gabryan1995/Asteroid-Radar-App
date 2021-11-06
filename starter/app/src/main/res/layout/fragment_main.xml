@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
         <variable
             name="viewModel"
             type="com.udacity.asteroidradar.main.MainViewModel" />
-
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -16,11 +16,12 @@
 
         <FrameLayout
             android:id="@+id/activity_main_image_of_the_day_layout"
-            android:layout_width="match_parent"
-            android:layout_height="220dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent"
+            app:marsApiStatus="@{viewModel.status}" >
 
             <ImageView
                 android:id="@+id/activity_main_image_of_the_day"
@@ -28,7 +29,7 @@
                 android:layout_height="match_parent"
                 android:adjustViewBounds="true"
                 android:scaleType="centerCrop"
-                app:srcCompat="@drawable/placeholder_picture_of_day"/>
+                app:srcCompat="@drawable/placeholder_picture_of_day" />
 
             <TextView
                 android:id="@+id/textView"
@@ -47,7 +48,8 @@
             android:id="@+id/asteroid_recycler"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:padding="16dp"
+            android:padding="6dp"
+            android:clipToPadding="false"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -55,7 +57,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/activity_main_image_of_the_day_layout"
             app:layout_constraintVertical_bias="0.0"
-            app:listData="@{viewModel.properties}"/>
+            app:listData="@{viewModel.asteroids}"
+            tools:listitem="@layout/list_view_item" />
 
         <ProgressBar
             android:id="@+id/status_loading_wheel"

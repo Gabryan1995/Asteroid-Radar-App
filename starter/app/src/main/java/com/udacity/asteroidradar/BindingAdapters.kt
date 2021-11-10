@@ -10,7 +10,7 @@ import com.squareup.picasso.Picasso
 import com.udacity.asteroidradar.main.AsteroidApiStatus
 import com.udacity.asteroidradar.main.AsteroidsAdapter
 
-@BindingAdapter("marsApiStatus")
+@BindingAdapter("potdStatus")
 fun bindStatus(statusImageView: ImageView, status: AsteroidApiStatus?) {
     when (status) {
         AsteroidApiStatus.LOADING -> {

@@ -18,22 +18,8 @@ data class NetworkAsteroid(
     val distanceFromEarth: Double,
     val isPotentiallyHazardous: Boolean)
 
-fun NetworkAsteroidContainer.asDomainModel(): List<Asteroid> {
-    return asteroids.map {
-        Asteroid(
-            id = it.id,
-            codename = it.codename,
-            closeApproachDate = it.closeApproachDate,
-            absoluteMagnitude = it.absoluteMagnitude,
-            estimatedDiameter = it.estimatedDiameter,
-            relativeVelocity = it.relativeVelocity,
-            distanceFromEarth = it.distanceFromEarth,
-            isPotentiallyHazardous = it.isPotentiallyHazardous)
-    }
-}
-
-fun NetworkAsteroidContainer.asDatabaseModel(): Array<DatabaseAsteroid> {
-    return asteroids.map {
+fun ArrayList<Asteroid>.asDatabaseModel(): Array<DatabaseAsteroid> {
+    return this.map {
         DatabaseAsteroid(
             id = it.id,
             codename = it.codename,
@@ -45,3 +31,20 @@ fun NetworkAsteroidContainer.asDatabaseModel(): Array<DatabaseAsteroid> {
             isPotentiallyHazardous = it.isPotentiallyHazardous)
     }.toTypedArray()
 }
+
+///**
+// * This function would only be necessary when updating the database. It converts the Network object to a database object.
+// */
+//fun NetworkAsteroidContainer.asDomainModel(): List<Asteroid> {
+//    return asteroids.map {
+//        Asteroid(
+//            id = it.id,
+//            codename = it.codename,
+//            closeApproachDate = it.closeApproachDate,
+//            absoluteMagnitude = it.absoluteMagnitude,
+//            estimatedDiameter = it.estimatedDiameter,
+//            relativeVelocity = it.relativeVelocity,
+//            distanceFromEarth = it.distanceFromEarth,
+//            isPotentiallyHazardous = it.isPotentiallyHazardous)
+//    }
+//}

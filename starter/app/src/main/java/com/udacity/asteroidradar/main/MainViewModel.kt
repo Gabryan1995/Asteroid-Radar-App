@@ -9,15 +9,20 @@ import com.squareup.picasso.Picasso
 import com.udacity.asteroidradar.Asteroid
 import com.udacity.asteroidradar.api.AsteroidApi
 import com.udacity.asteroidradar.api.PotdApi
-import com.udacity.asteroidradar.api.PotdApiService
+import com.udacity.asteroidradar.database.getDatabase
+import com.udacity.asteroidradar.repository.AsteroidRepository
 import kotlinx.coroutines.launch
 
 enum class AsteroidApiStatus { LOADING, ERROR, DONE }
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
-    private val _asteroids = MutableLiveData<List<Asteroid>>()
-    val asteroids: LiveData<List<Asteroid>>
-        get() = _asteroids
+
+    private val database = getDatabase(application)
+    private val asteroidRepository = AsteroidRepository(database)
+
+//    private val _asteroids = MutableLiveData<List<Asteroid>>()
+//    val asteroids: LiveData<List<Asteroid>>
+//        get() = _asteroids
 
     private val _navigateToSelectedAsteroid = MutableLiveData<Asteroid?>()
     val navigateToSelectedAsteroid: MutableLiveData<Asteroid?>
@@ -28,21 +33,25 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         get() = _status
 
     init {
-        getMarsRealEstateProperties()
-    }
-
-    private fun getMarsRealEstateProperties() {
         viewModelScope.launch {
-            _status.value = AsteroidApiStatus.LOADING
-            try {
-                _asteroids.value = AsteroidApi.retrofitService.getProperties()
-                _status.value = AsteroidApiStatus.DONE
-            } catch (e: Exception) {
-                _status.value = AsteroidApiStatus.ERROR
-                _asteroids.value = ArrayList()
-            }
+            asteroidRepository.refreshAsteroids()
         }
     }
+
+    val asteroids = asteroidRepository.asteroids
+
+//    private fun getMarsRealEstateProperties() {
+//        viewModelScope.launch {
+//            _status.value = AsteroidApiStatus.LOADING
+//            try {
+//                _asteroids.value = AsteroidApi.retrofitService.getProperties()
+//                _status.value = AsteroidApiStatus.DONE
+//            } catch (e: Exception) {
+//                _status.value = AsteroidApiStatus.ERROR
+//                _asteroids.value = ArrayList()
+//            }
+//        }
+//    }
 
     fun getPictureOfDay(imageView: ImageView, titleTextView: TextView) {
         viewModelScope.launch {
@@ -68,5 +77,15 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     fun displayAsteroidDetailsComplete() {
         _navigateToSelectedAsteroid.value = null
+    }
+
+    class Factory(val app: Application) : ViewModelProvider.Factory {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
+                @Suppress("UNCHECKED_CAST")
+                return MainViewModel(app) as T
+            }
+            throw IllegalArgumentException("Unable to construct viewmodel")
+        }
     }
 }

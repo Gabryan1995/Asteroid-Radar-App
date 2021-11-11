@@ -39,7 +39,8 @@ fun bindAsteroidStatusImage(imageView: ImageView, isHazardous: Boolean) {
 @BindingAdapter("listData")
 fun bindRecyclerView(recyclerView: RecyclerView, data: List<Asteroid>?) {
     val adapter = recyclerView.adapter as AsteroidsAdapter
-    adapter.submitList(data)
+    if (data != null)
+        adapter.asteroids = data
 }
 
 @BindingAdapter("asteroidStatusImage")

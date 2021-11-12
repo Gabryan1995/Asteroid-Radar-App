@@ -7,7 +7,6 @@ import android.widget.TextView
 import androidx.lifecycle.*
 import com.squareup.picasso.Picasso
 import com.udacity.asteroidradar.Asteroid
-import com.udacity.asteroidradar.api.AsteroidApi
 import com.udacity.asteroidradar.api.PotdApi
 import com.udacity.asteroidradar.database.getDatabase
 import com.udacity.asteroidradar.repository.AsteroidRepository
@@ -40,29 +39,18 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     val asteroids = asteroidRepository.asteroids
 
-//    private fun getMarsRealEstateProperties() {
-//        viewModelScope.launch {
-//            _status.value = AsteroidApiStatus.LOADING
-//            try {
-//                _asteroids.value = AsteroidApi.retrofitService.getProperties()
-//                _status.value = AsteroidApiStatus.DONE
-//            } catch (e: Exception) {
-//                _status.value = AsteroidApiStatus.ERROR
-//                _asteroids.value = ArrayList()
-//            }
-//        }
-//    }
-
     fun getPictureOfDay(imageView: ImageView, titleTextView: TextView) {
         viewModelScope.launch {
             try {
-                var potd = PotdApi.retrofitMoshiService.getPotD()
+                val potd = PotdApi.retrofitMoshiService.getPotD()
 
-                Picasso.with(getApplication<Application>().applicationContext)
-                    .load(potd.url)
-                    .into(imageView)
+                if (potd.mediaType == "image") {
+                    Picasso.with(getApplication<Application>().applicationContext)
+                        .load(potd.url)
+                        .into(imageView)
 
-                titleTextView.text = potd.title
+                    titleTextView.text = potd.title
+                }
 
                 Log.i("AsteroidsImage", "Success: ${potd.url}")
             } catch (e: Exception) {

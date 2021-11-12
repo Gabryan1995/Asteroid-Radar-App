@@ -31,7 +31,7 @@ class MainFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val binding = FragmentMainBinding.inflate(inflater)
-        binding.lifecycleOwner = this
+        binding.lifecycleOwner = this.viewLifecycleOwner
 
         binding.viewModel = viewModel
 
@@ -61,8 +61,4 @@ class MainFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return true
     }
-}
-
-class AsteroidClick(val block: (Asteroid) -> Unit) {
-    fun onClick(video: Asteroid) = block(video)
 }

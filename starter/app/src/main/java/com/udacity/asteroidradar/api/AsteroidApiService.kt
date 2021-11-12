@@ -30,7 +30,7 @@ interface AsteroidApiService {
     @GET("neo/rest/v1/feed")
     suspend fun getProperties(@Query("start_date") startDate: String,
                               @Query("end_date") endDate: String,
-                              @Query("api_key") apiKey: String): Deferred<NetworkAsteroidContainer>
+                              @Query("api_key") apiKey: String): NetworkAsteroidContainer
 }
 
 object AsteroidApi {

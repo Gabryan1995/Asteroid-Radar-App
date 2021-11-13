@@ -29,11 +29,11 @@ class MainFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
         val binding = FragmentMainBinding.inflate(inflater)
-        binding.lifecycleOwner = this.viewLifecycleOwner
+        binding.lifecycleOwner = this
 
         binding.viewModel = viewModel
 
-        binding.asteroidRecycler.adapter = AsteroidsAdapter(AsteroidsAdapter.OnClickListener {
+        binding.asteroidList.adapter = AsteroidsAdapter(AsteroidsAdapter.OnClickListener {
             viewModel.displayAsteroidDetails(it)
         })
 

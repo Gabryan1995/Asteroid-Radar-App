@@ -19,10 +19,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val database = getDatabase(application)
     private val asteroidRepository = AsteroidRepository(database)
 
-//    private val _asteroids = MutableLiveData<List<Asteroid>>()
-//    val asteroids: LiveData<List<Asteroid>>
-//        get() = _asteroids
-
     private val _navigateToSelectedAsteroid = MutableLiveData<Asteroid?>()
     val navigateToSelectedAsteroid: MutableLiveData<Asteroid?>
         get() = _navigateToSelectedAsteroid

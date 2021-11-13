@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.udacity.asteroidradar.Asteroid
 import com.udacity.asteroidradar.R
@@ -33,8 +34,13 @@ class AsteroidsAdapter(val onClickListener: OnClickListener) : RecyclerView.Adap
     override fun getItemCount() = asteroids.size
 
     override fun onBindViewHolder(holder: AsteroidViewHolder, position: Int) {
+        val currentAsteroid = asteroids[position]
+        holder.bind(currentAsteroid)
+        holder.itemView.setOnClickListener {
+            onClickListener.onClick(currentAsteroid)
+        }
         holder.viewDataBinding.also {
-            it.asteroid = asteroids[position]
+            it.asteroid = currentAsteroid
         }
     }
 
@@ -45,8 +51,14 @@ class AsteroidsAdapter(val onClickListener: OnClickListener) : RecyclerView.Adap
 
 class AsteroidViewHolder(val viewDataBinding: ListViewItemBinding):
     RecyclerView.ViewHolder(viewDataBinding.root) {
+
     companion object {
         @LayoutRes
         val LAYOUT = R.layout.list_view_item
+    }
+
+    fun bind(asteroid: Asteroid) {
+        viewDataBinding.asteroid = asteroid
+        viewDataBinding.executePendingBindings()
     }
 }

@@ -46,6 +46,7 @@
             android:layout_height="wrap_content"
             android:padding="16dp"
             app:statusIcon="@{asteroid.potentiallyHazardous}"
+            app:contentDescriptionDetail="@{asteroid.potentiallyHazardous}"
             tools:src="@drawable/ic_status_normal" />
 
     </LinearLayout>

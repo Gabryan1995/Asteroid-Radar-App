@@ -7,6 +7,7 @@ import android.widget.TextView
 import androidx.lifecycle.*
 import com.squareup.picasso.Picasso
 import com.udacity.asteroidradar.Asteroid
+import com.udacity.asteroidradar.PictureOfDay
 import com.udacity.asteroidradar.api.PotdApi
 import com.udacity.asteroidradar.database.getDatabase
 import com.udacity.asteroidradar.repository.AsteroidRepository
@@ -18,6 +19,10 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     private val database = getDatabase(application)
     private val asteroidRepository = AsteroidRepository(database)
+
+    private val _potd = MutableLiveData<PictureOfDay>()
+    val potd: LiveData<PictureOfDay>
+        get() = _potd
 
     private val _navigateToSelectedAsteroid = MutableLiveData<Asteroid?>()
     val navigateToSelectedAsteroid: MutableLiveData<Asteroid?>
@@ -35,20 +40,12 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     val asteroids = asteroidRepository.asteroids
 
-    fun getPictureOfDay(imageView: ImageView, titleTextView: TextView) {
+    fun getPictureOfDay() {
         viewModelScope.launch {
             try {
-                val potd = PotdApi.retrofitMoshiService.getPotD()
+                _potd.value = PotdApi.retrofitMoshiService.getPotD()
 
-                if (potd.mediaType == "image") {
-                    Picasso.with(getApplication<Application>().applicationContext)
-                        .load(potd.url)
-                        .into(imageView)
-
-                    titleTextView.text = potd.title
-                }
-
-                Log.i("AsteroidsImage", "Success: ${potd.url}")
+                Log.i("AsteroidsImage", "Success: ${_potd.value!!.url}")
             } catch (e: Exception) {
                 Log.i("AsteroidsImage", "Failure: ${e.message}")
             }

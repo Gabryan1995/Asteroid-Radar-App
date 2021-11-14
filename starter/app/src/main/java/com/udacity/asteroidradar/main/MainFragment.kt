@@ -44,7 +44,7 @@ class MainFragment : Fragment() {
             }
         })
 
-        viewModel.getPictureOfDay(binding.activityMainImageOfTheDay, binding.textView)
+        viewModel.getPictureOfDay()
 
         setHasOptionsMenu(true)
 

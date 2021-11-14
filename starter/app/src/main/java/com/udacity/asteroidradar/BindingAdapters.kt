@@ -1,12 +1,24 @@
 package com.udacity.asteroidradar
 
+import android.app.Application
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.net.toUri
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.squareup.picasso.Picasso
 import com.udacity.asteroidradar.main.AsteroidApiStatus
 import com.udacity.asteroidradar.main.AsteroidsAdapter
+
+@BindingAdapter("imageUrl")
+fun bindImage(imgView: ImageView, imgUrl: String?) {
+    imgUrl?.let {
+        Picasso.with(imgView.context)
+            .load(imgUrl)
+            .into(imgView)
+    }
+}
 
 @BindingAdapter("potdStatus")
 fun bindStatus(statusImageView: ImageView, status: AsteroidApiStatus?) {
@@ -31,6 +43,15 @@ fun bindAsteroidStatusImage(imageView: ImageView, isHazardous: Boolean) {
         imageView.setImageResource(R.drawable.ic_status_potentially_hazardous)
     } else {
         imageView.setImageResource(R.drawable.ic_status_normal)
+    }
+}
+
+@BindingAdapter("contentDescriptionDetail")
+fun bindAsteroidHazardImage(imageView: ImageView, isHazardous: Boolean) {
+    if (isHazardous) {
+        imageView.contentDescription = R.string.potentially_hazardous_asteroid_image.toString()
+    } else {
+        imageView.contentDescription = R.string.not_hazardous_asteroid_image.toString()
     }
 }
 
